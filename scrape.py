@@ -29,16 +29,49 @@ import bs4
 
 
 # ---- GRABBING AN IMAGE ----
-res = requests.get('https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)')
+# res = requests.get('https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)')
+# soup = bs4.BeautifulSoup(res.text,'html5lib')
+# # print(soup)
+# # print(soup.select('.thumbimage'))
+
+# computer = soup.select('.thumbimage')[0]
+# print(computer['src'])
+
+# image_link = requests.get('https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Deep_Blue.jpg/220px-Deep_Blue.jpg')
+# # print(image_link.content)
+# f = open('my_computer_image.jpg','wb')
+# f.write(image_link.content)
+# f.close()
+
+
+
+# ---- WORKING WITH MULTIPLE ELEMENTS ----
+# GOAL: Get the title of every book with a 2 star rating
+
+base_url = 'http://books.toscrape.com/catalogue/page-{}.html'
+res = requests.get(base_url.format(1))
 soup = bs4.BeautifulSoup(res.text,'html5lib')
-# print(soup)
-# print(soup.select('.thumbimage'))
+products = soup.select('.product_pod')
+example = products[0]
 
-computer = soup.select('.thumbimage')[0]
-print(computer['src'])
+# **add the dot when there is a whitespace seperating multiple class names
 
-image_link = requests.get('https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Deep_Blue.jpg/220px-Deep_Blue.jpg')
-# print(image_link.content)
-f = open('my_computer_image.jpg','wb')
-f.write(image_link.content)
-f.close()
+# print(example.select("a")[1]['title']) 
+# We can check if something is 2 stars (string call in, example.select(rating))
+# example.select('a')[1]['title'] to grab the book title 
+two_star_titles = []
+
+for n in range(1,51):
+
+    scrape_url = base_url.format(n)
+    res = requests.get(scrape_url)
+
+    soup = bs4.BeautifulSoup(res.text,'html5lib')
+    books = soup.select('.product_pod')
+
+    for book in books:
+        if len(book.select('.star-rating.Two')) != 0:
+            book_title = book.select("a")[1]['title']
+            two_star_titles.append(book_title)
+
+print(two_star_titles)
