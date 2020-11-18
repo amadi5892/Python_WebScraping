@@ -16,3 +16,14 @@ import bs4
 
 
 # ---- GRABBING A CLASS ----
+res = requests.get('https://en.wikipedia.org/wiki/Grace_Hopper')
+soup = bs4.BeautifulSoup(res.text,"html5lib")
+# print(soup)
+
+# soup 
+first_item = soup.select('.toctext')[0]
+print(first_item.text)
+
+for item in soup.select('.toctext'):
+    print(item.text)
+
