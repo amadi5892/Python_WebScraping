@@ -1,1 +1,1 @@
-Web Scraping
+Web Scraping & Working With Images
